@@ -36,10 +36,6 @@ public class AirportRepository {
         return new ArrayList<>(flights.values());
     }
 
-    public String bookATicket(Integer flightId, Integer passengerId) {
-
-    }
-
     public Flight getFlightById(Integer flightId) {
         return flights.get(flightId);
     }
@@ -97,8 +93,6 @@ public class AirportRepository {
         flightWithPassengerData.put(flightId,list);
     }
 
-    public String cancelATicket(Integer flightId, Integer passengerId) {
-    }
 
     public int getFareFromPayment(Integer passengerId) {
         return paymentMap.getOrDefault(passengerId,0);
