@@ -124,10 +124,10 @@ public class AirportService {
 
     public String getAirportName(Integer flightId) {
         List<Integer> flightList = airportRepository.getAllFlightsId();
+        if(!flightList.contains((flightId))) return null;
         List<String> airports = airportRepository.getAllAirportsName();
         Flight flight = airportRepository.getFlightById(flightId);
         City city = flight.getFromCity();
-        if(!flightList.contains((flightId))) return null;
         for (String airportName : airports){
             Airport airport = airportRepository.getAirport(airportName);
             if(city.equals(airport.getCity())){
