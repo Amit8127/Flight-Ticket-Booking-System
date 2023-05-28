@@ -52,7 +52,6 @@ public class AirportController {
 
     }
 
-
     @PostMapping("/book-a-ticket")
     public String bookATicket(@RequestParam("flightId")Integer flightId,@RequestParam("passengerId")Integer passengerId){
         //If the numberOfPassengers who have booked the flight is greater than : maxCapacity, in that case :
@@ -71,7 +70,6 @@ public class AirportController {
         return airportService.cancelATicket(flightId,passengerId);
     }
 
-
     @GetMapping("/get-count-of-bookings-done-by-a-passenger/{passengerId}")
     public int countOfBookingsDoneByPassengerAllCombined(@PathVariable("passengerId")Integer passengerId){
         //Tell the count of flight bookings done by a passenger: This will tell the total count of flight bookings done by a passenger :
@@ -85,26 +83,20 @@ public class AirportController {
         return "SUCCESS";
     }
 
-
     @GetMapping("/get-aiportName-from-flight-takeoff/{flightId}")
     public String getAirportNameFromFlightId(@PathVariable("flightId")Integer flightId){
-
         //We need to get the starting airportName from where the flight will be taking off (Hint think of City variable if that can be of some use)
         //return null incase the flightId is invalid or you are not able to find the airportName
-
         return airportService.getAirportName(flightId);
     }
 
-
     @GetMapping("/calculate-revenue-collected/{flightId}")
     public int calculateRevenueOfAFlight(@PathVariable("flightId")Integer flightId){
-
         //Calculate the total revenue that a flight could have
         //That is of all the passengers that have booked a flight till now and then calculate the revenue
         //Revenue will also decrease if some passenger cancels the flight
         return airportService.calculateRevenueOfAFlight(flightId);
     }
-
 
     @PostMapping("/add-passenger")
     public String addPassenger(@RequestBody Passenger passenger){

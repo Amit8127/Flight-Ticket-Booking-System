@@ -49,10 +49,6 @@ public class AirportService {
     }
 
     public String bookATicket(Integer flightId, Integer passengerId) {
-        //If the numberOfPassengers who have booked the flight is greater than : maxCapacity, in that case :
-        //return a String "FAILURE"
-        //Also if the passenger has already booked a flight then also return "FAILURE".
-        //else if you are able to book a ticket then return "SUCCESS"
         Flight flight = airportRepository.getFlightById(flightId);
         int maxCapacity = flight.getMaxCapacity();
         List<Integer> list= new ArrayList<>();
@@ -85,22 +81,63 @@ public class AirportService {
     }
 
     public int getNumberOfPeopleOn(Date date, String airportName) {
-        return airportRepository.getNumberOfPeopleOn(date, airportName);
+        Airport airport = airportRepository.getAirport(airportName);
+        List<Flight> flightList = airportRepository.getAllFlights();
+        int count = 0;
+        if(airport != null){
+            City city = airport.getCity();
+            for(Flight flight : flightList){
+                if(date.equals(flight.getFlightDate())){
+                    if(city.equals(flight.getToCity()) || city.equals(flight.getFromCity())){
+                        Integer flightId = flight.getFlightId();
+                        List<Integer> list = airportRepository.getPassengers(flightId);
+                        if(list != null){
+                            count += list.size();
+                        }
+                    }
+                }
+            }
+        }
+        return count;
     }
 
     public int calculateFare(Integer flightId) {
-        return airportRepository.calculateFare(flightId);
+        int fare = 3000;
+        int alreadyBooked = 0;
+        List<Integer> flightList = airportRepository.getAllBookedFlights();
+        if(flightList.contains(flightId))
+            alreadyBooked = airportRepository.getSizeByFlightId(flightId);
+        return (fare + (alreadyBooked * 50));
     }
 
     public int countOfBookingsDoneByPassengerAllCombined(Integer passengerId) {
-        return airportRepository.countOfBookingsDoneByPassengerAllCombined(passengerId);
+        List<Integer> flightList = airportRepository.getAllBookedFlights();
+        int count=0;
+        for(Integer flightId : flightList){
+            List<Integer> list = airportRepository.getPassengers(flightId);
+            if(list.contains(passengerId)){
+                count++;
+            }
+        }
+        return count;
     }
 
     public String getAirportName(Integer flightId) {
-        return airportRepository.getAirportNmae(flightId);
+        List<Integer> flightList = airportRepository.getAllFlightsId();
+        List<String> airports = airportRepository.getAllAirportsName();
+        Flight flight = airportRepository.getFlightById(flightId);
+        City city = flight.getFromCity();
+        if(!flightList.contains((flightId))) return null;
+        for (String airportName : airports){
+            Airport airport = airportRepository.getAirport(airportName);
+            if(city.equals(airport.getCity())){
+                return airportName;
+            }
+        }
+        return null;
     }
 
     public int calculateRevenueOfAFlight(Integer flightId) {
-        return airportRepository.calculateRevenueOfAFlight(flightId);
+        return airportRepository.getRevenueFromRevanue(flightId);
     }
 }

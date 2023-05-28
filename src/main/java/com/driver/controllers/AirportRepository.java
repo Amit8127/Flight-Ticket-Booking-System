@@ -40,38 +40,6 @@ public class AirportRepository {
         return flights.get(flightId);
     }
 
-    public Passenger getPassengerById(Integer passengerId) {
-        return passengers.get(passengerId);
-    }
-
-    public int getNumberOfPeopleOn(Date date, String airportName) {
-        Airport airport = airports.get(airportName);
-        int count = 0;
-        if(airport != null){
-            City city = airport.getCity();
-            for(Flight flight : flights.values()){
-                if(date.equals(flight.getFlightDate())){
-                    if(city.equals(flight.getToCity()) || city.equals(flight.getFromCity())){
-                        Integer flightId = flight.getFlightId();
-                        List<Integer> list = flightWithPassengerData.get(flightId);
-                        if(list != null){
-                            count += list.size();
-                        }
-                    }
-                }
-            }
-        }
-        return count;
-    }
-
-    public int calculateFare(Integer flightId) {
-        int fare = 3000;
-        int alreadyBooked = 0;
-        if(flightWithPassengerData.containsKey(flightId))
-            alreadyBooked = flightWithPassengerData.get(flightId).size();
-        return (fare + (alreadyBooked * 50));
-    }
-
     public boolean isValid(Integer flightId) {
         return flightWithPassengerData.containsKey(flightId);
     }
@@ -110,32 +78,23 @@ public class AirportRepository {
         revenueMap.put(flightId, revenue-fare);
     }
 
-    public int countOfBookingsDoneByPassengerAllCombined(Integer passengerId) {
-        int count=0;
-        for(Integer flightId : flightWithPassengerData.keySet()){
-            List<Integer> list = flightWithPassengerData.get(flightId);
-            if(list.contains(passengerId)){
-                count++;
-            }
-        }
-        return count;
+    public Airport getAirport(String airportName) {
+        return airports.get(airportName);
     }
 
-    public String getAirportNmae(Integer flightId) {
-        if(!flights.containsKey(flightId)) return null;
-        Flight flight= flights.get(flightId);
-        City city=flight.getFromCity();
-        for (String airportname:airports.keySet()){
-            Airport airport=airports.get(airportname);
-            if(city.equals(airport.getCity())){
-                return airportname;
-            }
-        }
-        return null;
+    public List<Integer> getAllBookedFlights() {
+        return new ArrayList<>(flightWithPassengerData.keySet());
     }
 
-    public int calculateRevenueOfAFlight(Integer flightId) {
-        Integer revenue= revenueMap.getOrDefault(flightId,0);
-        return revenue;
+    public int getSizeByFlightId(Integer flightId) {
+        return flightWithPassengerData.get(flightId).size();
+    }
+
+    public List<String> getAllAirportsName() {
+        return new ArrayList<>(airports.keySet());
+    }
+
+    public List<Integer> getAllFlightsId() {
+        return new ArrayList<>(flights.keySet());
     }
 }
